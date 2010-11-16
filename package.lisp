@@ -1,7 +1,14 @@
 (defpackage bld-e3
   (:use :cl :bld-ga :bld-gagen)
-  (:export :e3 :se3 :ve3 :bve3 :ie3 :re3 :mve3
-	   :*x2))
+  (:shadowing-import-from :bld-gen
+			  + - * / expt
+			  sin cos tan
+			  atan asin acos
+			  sinh cosh tanh 
+			  asinh acosh atanh
+			  log exp sqrt abs
+			  min max signum)
+  (:export :e3 :se3 :ve3 :bve3 :ie3 :re3 :mve3 :*x2))
 
 (in-package :bld-e3)
 

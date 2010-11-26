@@ -8,6 +8,6 @@
   :maintainer "Benjamin L. Diedrich" 
   :license "MIT" 
   :description "Euclidean 3D geometric algebra" 
-  :depends-on ("bld-ga" "bld-gagen")
+  :depends-on ("bld-gen" "bld-ga" "bld-gagen")
   :components ((:file "package")
 	       (:file "e3" :depends-on ("package"))))

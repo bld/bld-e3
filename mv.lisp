@@ -1,0 +1,154 @@
+
+(IN-PACKAGE :BLD-E3) 
+(PROGN
+ (DEFCLASS E3 (G)
+           ((COEF :INITFORM (MAKE-ARRAY 8 :INITIAL-ELEMENT 0))
+            (METRIC :ALLOCATION :CLASS :INITFORM (MAKE-METRIC NIL))
+            (DIMENSION :ALLOCATION :CLASS :INITFORM 3)
+            (SIZE :ALLOCATION :CLASS :INITFORM 8)
+            (REVTABLE :ALLOCATION :CLASS :INITFORM #(1 1 1 -1 1 -1 -1 -1))
+            (BITMAP :ALLOCATION :CLASS :INITFORM #(0 1 2 3 4 5 6 7))
+            (UNITVECTORS :ALLOCATION :CLASS :INITFORM (E1 E2 E3))
+            (BASISBLADES :ALLOCATION :CLASS :INITFORM
+                         (S E1 E2 E1E2 E3 E1E3 E2E3 E1E2E3))
+            (BASISBLADEKEYS :ALLOCATION :CLASS :INITFORM
+                            (:S :E1 :E2 :E1E2 :E3 :E1E3 :E2E3 :E1E2E3))
+            (SPEC :ALLOCATION :CLASS :INITFORM
+             '((E3 S E1 E2 E1E2 E3 E1E3 E2E3 E1E2E3) (SE3 S) (VE3 E1 E2 E3)
+               (BVE3 E1E2 E2E3 E1E3) (IE3 E1E2E3) (RE3 S E1E2 E2E3 E1E3))
+             :READER SPEC)))
+ (DEFMETHOD INITIALIZE-INSTANCE :AFTER
+            ((G E3) &KEY S E1 E2 E1E2 E3 E1E3 E2E3 E1E2E3)
+   (WHEN S (SETF (GREF G :S) S))
+   (WHEN E1 (SETF (GREF G :E1) E1))
+   (WHEN E2 (SETF (GREF G :E2) E2))
+   (WHEN E1E2 (SETF (GREF G :E1E2) E1E2))
+   (WHEN E3 (SETF (GREF G :E3) E3))
+   (WHEN E1E3 (SETF (GREF G :E1E3) E1E3))
+   (WHEN E2E3 (SETF (GREF G :E2E3) E2E3))
+   (WHEN E1E2E3 (SETF (GREF G :E1E2E3) E1E2E3)))) 
+(DEFCLASS SE3 (E3)
+          ((COEF :INITFORM (MAKE-ARRAY 1 :INITIAL-ELEMENT 0))
+           (SIZE :ALLOCATION :CLASS :INITFORM 1)
+           (BITMAP :ALLOCATION :CLASS :INITFORM #(0))
+           (BASISBLADES :ALLOCATION :CLASS :INITFORM '(S)))) 
+(DEFCLASS VE3 (E3)
+          ((COEF :INITFORM (MAKE-ARRAY 3 :INITIAL-ELEMENT 0))
+           (SIZE :ALLOCATION :CLASS :INITFORM 3)
+           (BITMAP :ALLOCATION :CLASS :INITFORM #(1 2 4))
+           (BASISBLADES :ALLOCATION :CLASS :INITFORM '(E1 E2 E3)))) 
+(DEFCLASS BVE3 (E3)
+          ((COEF :INITFORM (MAKE-ARRAY 3 :INITIAL-ELEMENT 0))
+           (SIZE :ALLOCATION :CLASS :INITFORM 3)
+           (BITMAP :ALLOCATION :CLASS :INITFORM #(3 6 5))
+           (BASISBLADES :ALLOCATION :CLASS :INITFORM '(E1E2 E2E3 E1E3)))) 
+(DEFCLASS IE3 (E3)
+          ((COEF :INITFORM (MAKE-ARRAY 1 :INITIAL-ELEMENT 0))
+           (SIZE :ALLOCATION :CLASS :INITFORM 1)
+           (BITMAP :ALLOCATION :CLASS :INITFORM #(7))
+           (BASISBLADES :ALLOCATION :CLASS :INITFORM '(E1E2E3)))) 
+(DEFCLASS RE3 (E3)
+          ((COEF :INITFORM (MAKE-ARRAY 4 :INITIAL-ELEMENT 0))
+           (SIZE :ALLOCATION :CLASS :INITFORM 4)
+           (BITMAP :ALLOCATION :CLASS :INITFORM #(0 3 6 5))
+           (BASISBLADES :ALLOCATION :CLASS :INITFORM '(S E1E2 E2E3 E1E3)))) 
+(DEFUN E3
+       (&KEY (S 0) (E1 0) (E2 0) (E1E2 0) (E3 0) (E1E3 0) (E2E3 0) (E1E2E3 0))
+  (MAKE-INSTANCE 'E3 :COEF (VECTOR S E1 E2 E1E2 E3 E1E3 E2E3 E1E2E3))) 
+(DEFUN SE3 (&KEY (S 0)) (MAKE-INSTANCE 'SE3 :COEF (VECTOR S))) 
+(DEFUN VE3 (&KEY (E1 0) (E2 0) (E3 0))
+  (MAKE-INSTANCE 'VE3 :COEF (VECTOR E1 E2 E3))) 
+(DEFUN BVE3 (&KEY (E1E2 0) (E2E3 0) (E1E3 0))
+  (MAKE-INSTANCE 'BVE3 :COEF (VECTOR E1E2 E2E3 E1E3))) 
+(DEFUN IE3 (&KEY (E1E2E3 0)) (MAKE-INSTANCE 'IE3 :COEF (VECTOR E1E2E3))) 
+(DEFUN RE3 (&KEY (S 0) (E1E2 0) (E2E3 0) (E1E3 0))
+  (MAKE-INSTANCE 'RE3 :COEF (VECTOR S E1E2 E2E3 E1E3))) 
+(DEFMETHOD GREF ((G E3) (BB SYMBOL))
+  (CASE BB
+    (:S (AREF (COEF G) 0))
+    (:E1 (AREF (COEF G) 1))
+    (:E2 (AREF (COEF G) 2))
+    (:E1E2 (AREF (COEF G) 3))
+    (:E3 (AREF (COEF G) 4))
+    (:E1E3 (AREF (COEF G) 5))
+    (:E2E3 (AREF (COEF G) 6))
+    (:E1E2E3 (AREF (COEF G) 7))
+    (T 0))) 
+(DEFMETHOD GREF ((G SE3) (BB SYMBOL)) (CASE BB (:S (AREF (COEF G) 0)) (T 0))) 
+(DEFMETHOD GREF ((G VE3) (BB SYMBOL))
+  (CASE BB
+    (:E1 (AREF (COEF G) 0))
+    (:E2 (AREF (COEF G) 1))
+    (:E3 (AREF (COEF G) 2))
+    (T 0))) 
+(DEFMETHOD GREF ((G BVE3) (BB SYMBOL))
+  (CASE BB
+    (:E1E2 (AREF (COEF G) 0))
+    (:E2E3 (AREF (COEF G) 1))
+    (:E1E3 (AREF (COEF G) 2))
+    (T 0))) 
+(DEFMETHOD GREF ((G IE3) (BB SYMBOL))
+  (CASE BB (:E1E2E3 (AREF (COEF G) 0)) (T 0))) 
+(DEFMETHOD GREF ((G RE3) (BB SYMBOL))
+  (CASE BB
+    (:S (AREF (COEF G) 0))
+    (:E1E2 (AREF (COEF G) 1))
+    (:E2E3 (AREF (COEF G) 2))
+    (:E1E3 (AREF (COEF G) 3))
+    (T 0))) 
+(DEFMETHOD GSET ((G E3) (BB SYMBOL) VAL)
+  (CASE BB
+    (:S (SETF (AREF (COEF G) 0) VAL))
+    (:E1 (SETF (AREF (COEF G) 1) VAL))
+    (:E2 (SETF (AREF (COEF G) 2) VAL))
+    (:E1E2 (SETF (AREF (COEF G) 3) VAL))
+    (:E3 (SETF (AREF (COEF G) 4) VAL))
+    (:E1E3 (SETF (AREF (COEF G) 5) VAL))
+    (:E2E3 (SETF (AREF (COEF G) 6) VAL))
+    (:E1E2E3 (SETF (AREF (COEF G) 7) VAL))
+    (T
+     (ERROR
+      (FORMAT NIL "Basis bitmap ~b doesn't exist in GA object of type E3."
+              BB))))) 
+(DEFMETHOD GSET ((G SE3) (BB SYMBOL) VAL)
+  (CASE BB
+    (:S (SETF (AREF (COEF G) 0) VAL))
+    (T
+     (ERROR
+      (FORMAT NIL "Basis bitmap ~b doesn't exist in GA object of type SE3."
+              BB))))) 
+(DEFMETHOD GSET ((G VE3) (BB SYMBOL) VAL)
+  (CASE BB
+    (:E1 (SETF (AREF (COEF G) 0) VAL))
+    (:E2 (SETF (AREF (COEF G) 1) VAL))
+    (:E3 (SETF (AREF (COEF G) 2) VAL))
+    (T
+     (ERROR
+      (FORMAT NIL "Basis bitmap ~b doesn't exist in GA object of type VE3."
+              BB))))) 
+(DEFMETHOD GSET ((G BVE3) (BB SYMBOL) VAL)
+  (CASE BB
+    (:E1E2 (SETF (AREF (COEF G) 0) VAL))
+    (:E2E3 (SETF (AREF (COEF G) 1) VAL))
+    (:E1E3 (SETF (AREF (COEF G) 2) VAL))
+    (T
+     (ERROR
+      (FORMAT NIL "Basis bitmap ~b doesn't exist in GA object of type BVE3."
+              BB))))) 
+(DEFMETHOD GSET ((G IE3) (BB SYMBOL) VAL)
+  (CASE BB
+    (:E1E2E3 (SETF (AREF (COEF G) 0) VAL))
+    (T
+     (ERROR
+      (FORMAT NIL "Basis bitmap ~b doesn't exist in GA object of type IE3."
+              BB))))) 
+(DEFMETHOD GSET ((G RE3) (BB SYMBOL) VAL)
+  (CASE BB
+    (:S (SETF (AREF (COEF G) 0) VAL))
+    (:E1E2 (SETF (AREF (COEF G) 1) VAL))
+    (:E2E3 (SETF (AREF (COEF G) 2) VAL))
+    (:E1E3 (SETF (AREF (COEF G) 3) VAL))
+    (T
+     (ERROR
+      (FORMAT NIL "Basis bitmap ~b doesn't exist in GA object of type RE3."
+              BB))))) 

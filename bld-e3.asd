@@ -1,13 +1,16 @@
-(defpackage :bld-e3.system
-  (:use :asdf :cl)) 
-(in-package :bld-e3.system) 
-(defsystem :bld-e3
-  :name "bld-e3" 
-  :author "Benjamin L. Diedrich" 
-  :version "0.0.1" 
-  :maintainer "Benjamin L. Diedrich" 
-  :license "MIT" 
-  :description "Euclidean 3D geometric algebra" 
-  :depends-on ("bld-gen" "bld-ga" "bld-gagen")
-  :components ((:file "package")
-	       (:file "e3" :depends-on ("package"))))
+
+(ASDF/DEFSYSTEM:DEFSYSTEM :BLD-E3
+  :NAME
+  "BLD-E3"
+  :AUTHOR
+  "Benjamin L. Diedrich"
+  :LICENSE
+  "MIT"
+  :DESCRIPTION
+  "Euclidean 2D geometric algebra"
+  :DEPENDS-ON
+  ("bld-gen" "bld-ga")
+  :SERIAL
+  T
+  :COMPONENTS
+  ((:FILE "package") (:FILE "mv") (:FILE "ga"))) 

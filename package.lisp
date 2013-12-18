@@ -1,29 +1,29 @@
-(defpackage bld-e3
-  (:use :cl :bld-ga :bld-gagen)
-  (:shadowing-import-from :bld-gen
-			  + - * / expt
-			  sin cos tan
-			  atan asin acos
-			  sinh cosh tanh 
-			  asinh acosh atanh
-			  log exp sqrt abs
-			  min max signum)
-  (:export :e3 :se3 :ve3 :bve3 :ie3 :re3 :mve3 :*x2))
 
-(in-package :bld-e3)
-
-(defparameter *spec*
-  '((se3 #(0))
-    (ve3 #(#b1 #b10 #b100))
-    (bve3 #(#b11 #b101 #b110))
-    (ie3 #(#b111))
-    (re3 #(0 #b11 #b101 #b110))
-    (mve3 #(0 #b1 #b10 #b100 #b11 #b101 #b110 #b111)))
-  "3D Euclidean algebra specification")
-
-(defg e3 3)
-(defgfun e3 3)
-
-(defmethod *x2 ((a e3) (b e3))
-  "3D cross product"
-  (dual (*o2 a b)))
+(DEFPACKAGE BLD-E3
+  (:USE :CL :BLD-GA)
+  (:SHADOWING-IMPORT-FROM :BLD-GEN
+                          +
+                          -
+                          *
+                          /
+                          EXPT
+                          SIN
+                          COS
+                          TAN
+                          ATAN
+                          ASIN
+                          ACOS
+                          SINH
+                          COSH
+                          TANH
+                          ASINH
+                          ACOSH
+                          ATANH
+                          LOG
+                          EXP
+                          SQRT
+                          ABS
+                          MIN
+                          MAX
+                          SIGNUM)
+  (:EXPORT :E3 :E3 :SE3 :VE3 :BVE3 :IE3 :RE3 :*X2 :*X)) 

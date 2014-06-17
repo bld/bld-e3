@@ -4232,21 +4232,24 @@
                          (* (GREF G1 :E1E2) (GREF G2 :E2E3))
                          (* -1 (GREF G1 :E2E3) (GREF G2 :E1E2)))
                       (GREF G3 :E1E2)))
-                  (+ (* -1 (GREF G3 :E2E3) (GREF G1 :E3) (GREF G2 :E1E3))
-                     (* (GREF G1 :E3) (GREF G3 :E1E3) (GREF G2 :E2E3))
-                     (*
-                      (+ (* -1 (GREF G3 :E1E3) (GREF G2 :E1E3))
-                         (* -1 (GREF G3 :E2E3) (GREF G2 :E2E3)))
-                      (GREF G1 :E1E2E3))
-                     (*
-                      (+ (* -1 (GREF G3 :E1E3) (GREF G1 :E1))
-                         (* -1 (GREF G3 :E2E3) (GREF G1 :E2)))
-                      (GREF G2 :E1E2))
-                     (*
-                      (+ (* (GREF G1 :E1) (GREF G2 :E1E3))
-                         (* (GREF G1 :E2) (GREF G2 :E2E3))
-                         (* -1 (GREF G1 :E1E2E3) (GREF G2 :E1E2)))
-                      (GREF G3 :E1E2)))))) 
+                  (+
+                   (*
+                    (+ (* -1 (GREF G3 :E2E3) (GREF G1 :E3))
+                       (* (GREF G3 :E1E2) (GREF G1 :E1)))
+                    (GREF G2 :E1E3))
+                   (*
+                    (+ (* (GREF G1 :E3) (GREF G3 :E1E3))
+                       (* (GREF G3 :E1E2) (GREF G1 :E2)))
+                    (GREF G2 :E2E3))
+                   (*
+                    (+ (* -1 (GREF G3 :E1E3) (GREF G2 :E1E3))
+                       (* -1 (GREF G3 :E2E3) (GREF G2 :E2E3)))
+                    (GREF G1 :E1E2E3))
+                   (*
+                    (+ (* -1 (GREF G3 :E1E3) (GREF G1 :E1))
+                       (* -1 (GREF G3 :E2E3) (GREF G1 :E2))
+                       (* -1 (GREF G3 :E1E2) (GREF G1 :E1E2E3)))
+                    (GREF G2 :E1E2)))))) 
 (DEFMETHOD *G3 ((G1 E3) (G2 BVE3) (G3 IE3))
   (MAKE-INSTANCE 'E3 :COEF
                  (VECTOR
@@ -15466,10 +15469,12 @@
 (DEFMETHOD SPIN ((G1 E3) (G2 RE3))
   (MAKE-INSTANCE 'E3 :COEF
                  (VECTOR
-                  (+ (* (GREF G1 :S) (EXPT (GREF G2 :S) 2))
-                     (* (GREF G1 :S) (EXPT (GREF G2 :E1E2) 2))
-                     (* (GREF G1 :S) (EXPT (GREF G2 :E1E3) 2))
-                     (* (GREF G1 :S) (EXPT (GREF G2 :E2E3) 2)))
+                  (+
+                   (*
+                    (+ (EXPT (GREF G2 :S) 2) (EXPT (GREF G2 :E1E2) 2)
+                       (EXPT (GREF G2 :E1E3) 2))
+                    (GREF G1 :S))
+                   (* (GREF G1 :S) (EXPT (GREF G2 :E2E3) 2)))
                   (+ (* 2 (GREF G2 :S) (GREF G1 :E3) (GREF G2 :E1E3))
                      (* 2 (GREF G2 :S) (GREF G2 :E1E2) (GREF G1 :E2))
                      (*
@@ -15492,18 +15497,19 @@
                        (* -2 (GREF G2 :E2E3) (GREF G1 :E1)))
                     (GREF G2 :E1E3))
                    (* (GREF G1 :E2) (EXPT (GREF G2 :E1E3) 2)))
-                  (+ (* (GREF G1 :E1E2) (EXPT (GREF G2 :S) 2))
-                     (* (GREF G1 :E1E2) (EXPT (GREF G2 :E1E2) 2))
-                     (*
-                      (+ (* -2 (GREF G1 :E2E3) (GREF G2 :S))
-                         (* 2 (GREF G1 :E1E3) (GREF G2 :E1E2)))
-                      (GREF G2 :E1E3))
-                     (* -1 (GREF G1 :E1E2) (EXPT (GREF G2 :E1E3) 2))
-                     (*
-                      (+ (* 2 (GREF G1 :E1E3) (GREF G2 :S))
-                         (* 2 (GREF G1 :E2E3) (GREF G2 :E1E2)))
-                      (GREF G2 :E2E3))
-                     (* -1 (GREF G1 :E1E2) (EXPT (GREF G2 :E2E3) 2)))
+                  (+
+                   (* (+ (EXPT (GREF G2 :S) 2) (EXPT (GREF G2 :E1E2) 2))
+                      (GREF G1 :E1E2))
+                   (*
+                    (+ (* 2 (GREF G1 :E2E3) (GREF G2 :E1E2))
+                       (* 2 (GREF G2 :S) (GREF G1 :E1E3)))
+                    (GREF G2 :E2E3))
+                   (* -1 (GREF G1 :E1E2) (EXPT (GREF G2 :E2E3) 2))
+                   (*
+                    (+ (* -2 (GREF G2 :S) (GREF G1 :E2E3))
+                       (* 2 (GREF G2 :E1E2) (GREF G1 :E1E3)))
+                    (GREF G2 :E1E3))
+                   (* -1 (GREF G1 :E1E2) (EXPT (GREF G2 :E1E3) 2)))
                   (+ (* (EXPT (GREF G2 :S) 2) (GREF G1 :E3))
                      (* -1 (GREF G1 :E3) (EXPT (GREF G2 :E1E3) 2))
                      (* -2 (GREF G2 :S) (GREF G1 :E2) (GREF G2 :E2E3))
@@ -15514,26 +15520,30 @@
                          (* 2 (GREF G2 :E2E3) (GREF G1 :E1)))
                       (GREF G2 :E1E2))
                      (* (GREF G1 :E3) (EXPT (GREF G2 :E1E2) 2)))
-                  (+ (* (GREF G1 :E1E3) (EXPT (GREF G2 :S) 2))
-                     (* 2 (GREF G1 :E2E3) (GREF G2 :S) (GREF G2 :E1E2))
-                     (* -1 (GREF G1 :E1E3) (EXPT (GREF G2 :E1E2) 2))
-                     (* 2 (GREF G1 :E1E2) (GREF G2 :E1E2) (GREF G2 :E1E3))
+                  (+ (* (EXPT (GREF G2 :S) 2) (GREF G1 :E1E3))
                      (* (GREF G1 :E1E3) (EXPT (GREF G2 :E1E3) 2))
                      (*
-                      (+ (* -2 (GREF G1 :E1E2) (GREF G2 :S))
-                         (* 2 (GREF G1 :E2E3) (GREF G2 :E1E3)))
+                      (+ (* 2 (GREF G1 :E2E3) (GREF G2 :E1E3))
+                         (* -2 (GREF G2 :S) (GREF G1 :E1E2)))
                       (GREF G2 :E2E3))
-                     (* -1 (GREF G1 :E1E3) (EXPT (GREF G2 :E2E3) 2)))
-                  (+ (* (GREF G1 :E2E3) (EXPT (GREF G2 :S) 2))
-                     (* -2 (GREF G1 :E1E3) (GREF G2 :S) (GREF G2 :E1E2))
-                     (* -1 (GREF G1 :E2E3) (EXPT (GREF G2 :E1E2) 2))
-                     (* 2 (GREF G1 :E1E2) (GREF G2 :S) (GREF G2 :E1E3))
+                     (* -1 (GREF G1 :E1E3) (EXPT (GREF G2 :E2E3) 2))
+                     (*
+                      (+ (* 2 (GREF G2 :S) (GREF G1 :E2E3))
+                         (* 2 (GREF G2 :E1E3) (GREF G1 :E1E2)))
+                      (GREF G2 :E1E2))
+                     (* -1 (GREF G1 :E1E3) (EXPT (GREF G2 :E1E2) 2)))
+                  (+ (* -1 (GREF G1 :E2E3) (EXPT (GREF G2 :E1E2) 2))
                      (* -1 (GREF G1 :E2E3) (EXPT (GREF G2 :E1E3) 2))
                      (*
-                      (+ (* 2 (GREF G1 :E1E2) (GREF G2 :E1E2))
-                         (* 2 (GREF G1 :E1E3) (GREF G2 :E1E3)))
+                      (+ (* 2 (GREF G1 :E1E3) (GREF G2 :E1E3))
+                         (* 2 (GREF G2 :E1E2) (GREF G1 :E1E2)))
                       (GREF G2 :E2E3))
-                     (* (GREF G1 :E2E3) (EXPT (GREF G2 :E2E3) 2)))
+                     (* (GREF G1 :E2E3) (EXPT (GREF G2 :E2E3) 2))
+                     (*
+                      (+ (* -2 (GREF G2 :E1E2) (GREF G1 :E1E3))
+                         (* 2 (GREF G2 :E1E3) (GREF G1 :E1E2)))
+                      (GREF G2 :S))
+                     (* (GREF G1 :E2E3) (EXPT (GREF G2 :S) 2)))
                   (+ (* (GREF G1 :E1E2E3) (EXPT (GREF G2 :E1E2) 2))
                      (* (GREF G1 :E1E2E3) (EXPT (GREF G2 :E1E3) 2))
                      (* (GREF G1 :E1E2E3) (EXPT (GREF G2 :E2E3) 2))
